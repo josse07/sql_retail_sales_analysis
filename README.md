@@ -1,4 +1,4 @@
-# Retail Sales Analysis SQL Project
+ # Retail Sales Analysis SQL Project
 
 ## Project Overview
 
@@ -72,118 +72,114 @@ The following SQL queries were developed to answer specific business questions:
 
 1. **Write a SQL query to retrieve all columns for sales made on '2022-11-05**:
 ```sql
-SELECT *
-FROM retail_sales
+SELECT * FROM reatil_sales_analysis
 WHERE sale_date = '2022-11-05';
 ```
 
 2. **Write a SQL query to retrieve all transactions where the category is 'Clothing' and the quantity sold is more than 4 in the month of Nov-2022**:
 ```sql
-SELECT 
-  *
-FROM retail_sales
-WHERE 
-    category = 'Clothing'
-    AND 
-    TO_CHAR(sale_date, 'YYYY-MM') = '2022-11'
-    AND
-    quantity >= 4
+SELECT * 
+FROM reatil_sales_analysis
+WHERE category = 'Clothing'
+	   AND 
+	   quantiy >= '4'
+	   AND 
+	   TO_CHAR(sale_date, 'YYYY-MM') = '2022-11'
+ORDER BY 1
 ```
 
 3. **Write a SQL query to calculate the total sales (total_sale) for each category.**:
 ```sql
 SELECT 
-    category,
-    SUM(total_sale) as net_sale,
-    COUNT(*) as total_orders
-FROM retail_sales
+	category,
+	SUM(total_sale) AS net_sale,
+	COUNT(*) AS total_orders
+FROM reatil_sales_analysis
 GROUP BY 1
 ```
 
 4. **Write a SQL query to find the average age of customers who purchased items from the 'Beauty' category.**:
 ```sql
-SELECT
-    ROUND(AVG(age), 2) as avg_age
-FROM retail_sales
-WHERE category = 'Beauty'
+SELECT 
+	category,
+	SUM(total_sale) AS net_sale,
+	COUNT(*) AS total_orders
+FROM reatil_sales_analysis
+GROUP BY 1
 ```
 
 5. **Write a SQL query to find all transactions where the total_sale is greater than 1000.**:
 ```sql
-SELECT * FROM retail_sales
-WHERE total_sale > 1000
+FROM reatil_sales_analysis
+WHERE total_sale >= '1000'
 ```
 
 6. **Write a SQL query to find the total number of transactions (transaction_id) made by each gender in each category.**:
 ```sql
 SELECT 
-    category,
-    gender,
-    COUNT(*) as total_trans
-FROM retail_sales
-GROUP 
-    BY 
-    category,
-    gender
-ORDER BY 1
+	category,
+	gender,
+	COUNT(*) AS total_trans
+FROM reatil_sales_analysis
+GROUP BY 1, 2
 ```
 
 7. **Write a SQL query to calculate the average sale for each month. Find out best selling month in each year**:
 ```sql
 SELECT 
-       year,
-       month,
-    avg_sale
-FROM 
-(    
-SELECT 
-    EXTRACT(YEAR FROM sale_date) as year,
-    EXTRACT(MONTH FROM sale_date) as month,
-    AVG(total_sale) as avg_sale,
-    RANK() OVER(PARTITION BY EXTRACT(YEAR FROM sale_date) ORDER BY AVG(total_sale) DESC) as rank
-FROM retail_sales
-GROUP BY 1, 2
-) as t1
+	year,
+	month,
+	avg_sale
+FROM
+(
+	SELECT 
+		EXTRACT(YEAR FROM sale_date) AS year,
+		EXTRACT(MONTH FROM sale_date) as month,
+		AVG(total_sale) AS avg_sale,
+		RANK() OVER(PARTITION BY EXTRACT(YEAR FROM sale_date)ORDER BY AVG(total_sale) DESC) AS rank
+	FROM reatil_sales_analysis
+	GROUP BY 1,2
+) AS t1
 WHERE rank = 1
 ```
 
 8. **Write a SQL query to find the top 5 customers based on the highest total sales **:
 ```sql
 SELECT 
-    customer_id,
-    SUM(total_sale) as total_sales
-FROM retail_sales
+	customer_id,
+	SUM(total_sale) AS total_sale
+FROM reatil_sales_analysis
 GROUP BY 1
-ORDER BY 2 DESC
+ORDER BY total_sale DESC
 LIMIT 5
 ```
 
 9. **Write a SQL query to find the number of unique customers who purchased items from each category.**:
 ```sql
 SELECT 
-    category,    
-    COUNT(DISTINCT customer_id) as cnt_unique_cs
-FROM retail_sales
+	category,
+	COUNT(DISTINCT customer_id) AS unique_custmers
+FROM reatil_sales_analysis
 GROUP BY category
 ```
 
 10. **Write a SQL query to create each shift and number of orders (Example Morning <12, Afternoon Between 12 & 17, Evening >17)**:
 ```sql
-WITH hourly_sale
+WITH hourly_sales
 AS
 (
 SELECT *,
-    CASE
-        WHEN EXTRACT(HOUR FROM sale_time) < 12 THEN 'Morning'
-        WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
-        ELSE 'Evening'
-    END as shift
-FROM retail_sales
+	CASE
+		WHEN EXTRACT(HOUR FROM sale_time) < 12 THEN 'Morning' 
+		WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+		ELSE 'Evening'
+	END AS SHIFT 
+FROM reatil_sales_analysis
 )
 SELECT 
-    shift,
-    COUNT(*) as total_orders    
-FROM hourly_sale
+	shift,
+	COUNT(*) AS total_orders
+FROM hourly_sales
 GROUP BY shift
 ```
 
@@ -202,26 +198,12 @@ GROUP BY shift
 
 ## Conclusion
 
-This project serves as a comprehensive introduction to SQL for data analysts, covering database setup, data cleaning, exploratory data analysis, and business-driven SQL queries. The findings from this project can help drive business decisions by understanding sales patterns, customer behavior, and product performance.
+Designed as an end-to-end SQL learning experience, this project goes beyond syntax to demonstrate how SQL drives real business value. From structuring databases and cleaning raw data to exploring patterns and answering strategic questions, the analysis reveals key insights into sales performance, customer behavior, and product trends.
 
-## How to Use
+This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch! ON
 
-1. **Clone the Repository**: Clone this project repository from GitHub.
-2. **Set Up the Database**: Run the SQL scripts provided in the `database_setup.sql` file to create and populate the database.
-3. **Run the Queries**: Use the SQL queries provided in the `analysis_queries.sql` file to perform your analysis.
-4. **Explore and Modify**: Feel free to modify the queries to explore different aspects of the dataset or answer additional business questions.
-
-## Author - Zero Analyst
-
-This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch!
-
-### Stay Updated and Join the Community
-
-For more content on SQL, data analysis, and other data-related topics, make sure to follow me on social media and join our community:
-
-- **YouTube**: [Subscribe to my channel for tutorials and insights](https://www.youtube.com/@zero_analyst)
-- **Instagram**: [Follow me for daily tips and updates](https://www.instagram.com/zero_analyst/)
-- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/najirr)
-- **Discord**: [Join our community to learn and grow together](https://discord.gg/36h5f2Z5PK)
+My linkedin:www.linkedin.com/in/ayoola-splashtech
+&
+Email:ayoolawale1999@gmail.com 
 
 Thank you for your support, and I look forward to connecting with you!
